@@ -11,6 +11,18 @@ public class SqlLiteActivityRepository : IActivityRepository
         this.dbContext = dbContext;
     }
 
+    public async Task<List<Activity>> GetAllAsync()
+    {
+        return await dbContext.Activities.ToListAsync();
+    }
+
+    public async Task<Activity> GetByIdAsync(Guid id)
+    {
+        // Get Activity from Database
+        //var activity = dbContext.Activities.Find(id); //find using primary key
+        return await dbContext.Activities.FirstOrDefaultAsync(x => x.Id == id); //use LINQ
+    }
+
     public async Task<Activity> CreateAsync(Activity activityDomainModel)
     {
         await dbContext.Activities.AddAsync(activityDomainModel);
@@ -19,10 +31,37 @@ public class SqlLiteActivityRepository : IActivityRepository
         return activityDomainModel;
     }
 
-    public async Task<Activity> GetByIdAsync(Guid id)
+    public async Task<Activity?> UpdateAsync(Guid id, Activity activity)
     {
-        // Get Activity from Database
-        //var activity = dbContext.Activities.Find(id); //find using primary key
-        return await dbContext.Activities.FirstOrDefaultAsync(x => x.Id == id); //use LINQ
+        // check if activity exists
+        var existingActivity = await dbContext.Activities.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (existingActivity == null)
+        {
+            return null;
+        }
+
+        //map DTO to domain model and save in db
+        existingActivity.Name = activity.Name;
+        existingActivity.Description = activity.Description;
+
+        await dbContext.SaveChangesAsync();
+        return existingActivity;
+    }
+
+    public async Task<Activity?> DeleteAsync(Guid id)
+    {
+        // check if activity exists
+        var activityDomainModel = await dbContext.Activities.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (activityDomainModel == null)
+        {
+            return null;
+        }
+
+        //delete region
+        dbContext.Activities.Remove(activityDomainModel);
+        await dbContext.SaveChangesAsync();
+        return activityDomainModel;
     }
 }

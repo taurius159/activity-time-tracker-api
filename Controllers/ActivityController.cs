@@ -18,11 +18,17 @@ public class ActivityController : ControllerBase
         this.mapper = mapper;
     }
 
-    // [HttpGet]
-    // public async Task<ActionResult<IEnumerable<Activity>>> GetActivities()
-    // {
-    //     return await _context.Activities.ToListAsync();
-    // }
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Activity>>> GetActivities()
+    {
+        // Get data from database - domain models
+        var activitiesDomain = await activityRepository.GetAllAsync();
+
+        var activitiesDto = mapper.Map<List<ActivityDto>>(activitiesDomain);
+
+        // Map Domain Models to DTO
+        return Ok(activitiesDto);
+    }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Activity>> GetActivity([FromRoute] Guid id)
@@ -55,30 +61,21 @@ public class ActivityController : ControllerBase
     // [HttpPut("{id}")]
     // public async Task<IActionResult> PutActivity(int id, Activity activity)
     // {
-    //     if (id != activity.Id)
-    //     {
-    //         return BadRequest();
-    //     }
+    //     // //map DTO to domain model for passing to repository for updating
+    //     // var activityDomainModel = mapper.Map<Activity>(updateRegionRequestDto);
+        
+    //     // // check if region exists
+    //     // regionDomainModel = await regionRepository.UpdateAsync(id, regionDomainModel);
 
-    //     _context.Entry(activity).State = EntityState.Modified;
+    //     // if (regionDomainModel == null)
+    //     // {
+    //     //     return NotFound();
+    //     // }
 
-    //     try
-    //     {
-    //         await _context.SaveChangesAsync();
-    //     }
-    //     catch (DbUpdateConcurrencyException)
-    //     {
-    //         if (!ActivityExists(id))
-    //         {
-    //             return NotFound();
-    //         }
-    //         else
-    //         {
-    //             throw;
-    //         }
-    //     }
+    //     // //convert domain model to DTO
+    //     // var regionDto = mapper.Map<RegionDTO>(regionDomainModel);
 
-    //     return NoContent();
+    //     // return Ok(regionDto);
     // }
 
     // [HttpDelete("{id}")]
