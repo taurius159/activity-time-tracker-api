@@ -15,8 +15,7 @@ namespace activity_time_tracker_api.Migrations
                 name: "Activities",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -29,8 +28,7 @@ namespace activity_time_tracker_api.Migrations
                 name: "ActivityRecords",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     StartTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     EndTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     ActivityId = table.Column<int>(type: "INTEGER", nullable: false)
@@ -39,17 +37,12 @@ namespace activity_time_tracker_api.Migrations
                 {
                     table.PrimaryKey("PK_ActivityRecords", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ActivityRecords_Activities_ActivityId",
-                        column: x => x.ActivityId,
+                        name: "FK_ActivityRecords_Activities_Id",
+                        column: x => x.Id,
                         principalTable: "Activities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ActivityRecords_ActivityId",
-                table: "ActivityRecords",
-                column: "ActivityId");
         }
 
         /// <inheritdoc />

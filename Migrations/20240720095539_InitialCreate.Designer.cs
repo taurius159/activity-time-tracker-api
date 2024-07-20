@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace activity_time_tracker_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240720084229_InitialCreate")]
+    [Migration("20240720095539_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -21,9 +21,9 @@ namespace activity_time_tracker_api.Migrations
 
             modelBuilder.Entity("Models.Activity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
@@ -39,9 +39,8 @@ namespace activity_time_tracker_api.Migrations
 
             modelBuilder.Entity("Models.ActivityRecord", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("ActivityId")
                         .HasColumnType("INTEGER");
@@ -54,8 +53,6 @@ namespace activity_time_tracker_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ActivityId");
-
                     b.ToTable("ActivityRecords");
                 });
 
@@ -63,7 +60,7 @@ namespace activity_time_tracker_api.Migrations
                 {
                     b.HasOne("Models.Activity", "Activity")
                         .WithMany("ActivityRecords")
-                        .HasForeignKey("ActivityId")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
