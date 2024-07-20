@@ -1,4 +1,4 @@
-using Models;
+using Models.Domains;
 
 namespace Api.Repositories;
 public interface IActivityRepository

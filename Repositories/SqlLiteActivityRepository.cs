@@ -1,4 +1,4 @@
-using Models;
+using Models.Domains;
 using Microsoft.EntityFrameworkCore;
 using Api.Repositories;
 

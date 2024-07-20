@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Models.DTOs;
+namespace Models.Domains;
 public class ActivityDto
 {
     public Guid Id { get; set; }

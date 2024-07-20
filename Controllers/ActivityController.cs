@@ -1,7 +1,8 @@
 using Api.Repositories;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Models;
+using Models.Domains;
 using Models.DTOs;
 
 [Route("api/[controller]")]
@@ -9,10 +10,12 @@ using Models.DTOs;
 public class ActivityController : ControllerBase
 {
     private readonly IActivityRepository activityRepository;
+    private readonly IMapper mapper;
 
-    public ActivityController(IActivityRepository activityRepository)
+    public ActivityController(IActivityRepository activityRepository, IMapper mapper)
     {
         this.activityRepository = activityRepository;
+        this.mapper = mapper;
     }
 
     // [HttpGet]
@@ -31,37 +34,20 @@ public class ActivityController : ControllerBase
             return NotFound();
         }
 
-        //convert to DTO
-        var activityDto = new ActivityDto
-        {
-          Id = activityDomain.Id,
-          Name = activityDomain.Name,
-          Description = activityDomain.Description  
-        };
-
-        return Ok(activityDto);
+        return Ok(mapper.Map<ActivityDto>(activityDomain));
     }
 
     [HttpPost]
     public async Task<ActionResult> Create([FromBody] AddActivityRequestDto addActivityRequestDto)
     {
         // convert DTO to domain mondel
-        var activity = new Activity{
-            Id = Guid.NewGuid(),
-            Name = addActivityRequestDto.Name,
-            Description = addActivityRequestDto.Description
-        };
+        var activity = mapper.Map<Activity>(addActivityRequestDto);
 
         // use domain model to create activity
         activity = await activityRepository.CreateAsync(activity);
 
         // convert back to DTO
-        var activityDto = new ActivityDto
-        {
-            Id = activity.Id,
-            Name = activity.Name,
-            Description = activity.Description
-        };
+        var activityDto = mapper.Map<ActivityDto>(activity);
 
         return CreatedAtAction(nameof(GetActivity), new { id = activityDto.Id }, activityDto);
     }
