@@ -16,14 +16,14 @@ public class SqlLiteActivityRecordRepository : IActivityRecordRepository
         return await dbContext.ActivityRecords.ToListAsync();
     }
 
-    public async Task<ActivityRecord> GetByIdAsync(Guid id)
+    public async Task<ActivityRecord?> GetByIdAsync(Guid id)
     {
         // Get Activity from Database
         //var activity = dbContext.Activities.Find(id); //find using primary key
         return await dbContext.ActivityRecords.FirstOrDefaultAsync(x => x.Id == id); //use LINQ
     }
 
-    public async Task<ActivityRecord> CreateAsync(ActivityRecord activityRecordDomainModel)
+    public async Task<ActivityRecord?> CreateAsync(ActivityRecord activityRecordDomainModel)
     {
         await dbContext.ActivityRecords.AddAsync(activityRecordDomainModel);
         await dbContext.SaveChangesAsync();

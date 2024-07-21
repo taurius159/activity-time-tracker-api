@@ -13,17 +13,19 @@ public class SqlLiteActivityRepository : IActivityRepository
 
     public async Task<List<Activity>> GetAllAsync()
     {
-        return await dbContext.Activities.ToListAsync();
+        return await dbContext.Activities
+                                    .Include(a => a.ActivityRecords)
+                                    .ToListAsync();
     }
 
-    public async Task<Activity> GetByIdAsync(Guid id)
+    public async Task<Activity?> GetByIdAsync(Guid id)
     {
         // Get Activity from Database
         //var activity = dbContext.Activities.Find(id); //find using primary key
         return await dbContext.Activities.FirstOrDefaultAsync(x => x.Id == id); //use LINQ
     }
 
-    public async Task<Activity> CreateAsync(Activity activityDomainModel)
+    public async Task<Activity?> CreateAsync(Activity activityDomainModel)
     {
         await dbContext.Activities.AddAsync(activityDomainModel);
         await dbContext.SaveChangesAsync();
