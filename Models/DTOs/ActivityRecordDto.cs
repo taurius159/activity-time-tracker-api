@@ -1,6 +1,7 @@
-namespace Models.Domains;
+using System.ComponentModel.DataAnnotations;
 
-public class ActivityRecord
+namespace Models.Domains;
+public class ActivityRecordDto
 {
     public Guid Id { get; set; }
     public DateTime StartTime { get; set; }
@@ -10,5 +11,5 @@ public class ActivityRecord
     public Guid ActivityId { get; set; }
 
     // Navigation property for the related Activity
-    public Activity Activity { get; set; } = null!;
+    public Activity Activity { get; set; }
 }

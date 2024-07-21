@@ -31,18 +31,23 @@ namespace activity_time_tracker_api.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     StartTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     EndTime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    ActivityId = table.Column<int>(type: "INTEGER", nullable: false)
+                    ActivityId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ActivityRecords", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ActivityRecords_Activities_Id",
-                        column: x => x.Id,
+                        name: "FK_ActivityRecords_Activities_ActivityId",
+                        column: x => x.ActivityId,
                         principalTable: "Activities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ActivityRecords_ActivityId",
+                table: "ActivityRecords",
+                column: "ActivityId");
         }
 
         /// <inheritdoc />

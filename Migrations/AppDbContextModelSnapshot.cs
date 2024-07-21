@@ -16,7 +16,7 @@ namespace activity_time_tracker_api.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
 
-            modelBuilder.Entity("Models.Activity", b =>
+            modelBuilder.Entity("Models.Domains.Activity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,13 +34,14 @@ namespace activity_time_tracker_api.Migrations
                     b.ToTable("Activities");
                 });
 
-            modelBuilder.Entity("Models.ActivityRecord", b =>
+            modelBuilder.Entity("Models.Domains.ActivityRecord", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ActivityId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("ActivityId")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("TEXT");
@@ -50,21 +51,23 @@ namespace activity_time_tracker_api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ActivityId");
+
                     b.ToTable("ActivityRecords");
                 });
 
-            modelBuilder.Entity("Models.ActivityRecord", b =>
+            modelBuilder.Entity("Models.Domains.ActivityRecord", b =>
                 {
-                    b.HasOne("Models.Activity", "Activity")
+                    b.HasOne("Models.Domains.Activity", "Activity")
                         .WithMany("ActivityRecords")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ActivityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Activity");
                 });
 
-            modelBuilder.Entity("Models.Activity", b =>
+            modelBuilder.Entity("Models.Domains.Activity", b =>
                 {
                     b.Navigation("ActivityRecords");
                 });

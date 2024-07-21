@@ -7,5 +7,5 @@ public class Activity
     public string? Description {get; set; }
 
     // Navigation property for related ActivityRecords
-    public ICollection<ActivityRecord>? ActivityRecords { get; set; }
+    public ICollection<ActivityRecord> ActivityRecords { get; } = new List<ActivityRecord>();
 }

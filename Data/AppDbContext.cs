@@ -13,7 +13,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Activity>()
             .HasMany(a => a.ActivityRecords)
             .WithOne(ar => ar.Activity)
-            .HasForeignKey(ar => ar.Id)
+            .HasForeignKey(ar => ar.ActivityId)
             .IsRequired();
     }
 }
