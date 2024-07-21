@@ -10,5 +10,6 @@ public class AutoMapperProfiles : Profile
     {
         CreateMap<Activity, ActivityDto>().ReverseMap();
         CreateMap<AddActivityRequestDto, Activity>().ReverseMap();
+        CreateMap<UpdateActivityRequestDto, Activity>().ReverseMap();
     }
 }

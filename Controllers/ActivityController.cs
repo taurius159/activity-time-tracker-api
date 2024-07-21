@@ -58,38 +58,42 @@ public class ActivityController : ControllerBase
         return CreatedAtAction(nameof(GetActivity), new { id = activityDto.Id }, activityDto);
     }
 
-    // [HttpPut("{id}")]
-    // public async Task<IActionResult> PutActivity(int id, Activity activity)
-    // {
-    //     // //map DTO to domain model for passing to repository for updating
-    //     // var activityDomainModel = mapper.Map<Activity>(updateRegionRequestDto);
+    [HttpPut]
+    [Route("{id:Guid}")]
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateActivityRequestDto updateActivityRequestDto)
+    {
+        //map DTO to domain model for passing to repository for updating
+        var activityDomainModel = mapper.Map<Activity>(updateActivityRequestDto);
         
-    //     // // check if region exists
-    //     // regionDomainModel = await regionRepository.UpdateAsync(id, regionDomainModel);
+        // check if activity exists
+        activityDomainModel = await activityRepository.UpdateAsync(id, activityDomainModel);
 
-    //     // if (regionDomainModel == null)
-    //     // {
-    //     //     return NotFound();
-    //     // }
+        if (activityDomainModel == null)
+        {
+            return NotFound();
+        }
 
-    //     // //convert domain model to DTO
-    //     // var regionDto = mapper.Map<RegionDTO>(regionDomainModel);
+        //convert domain model to DTO
+        var activityDto = mapper.Map<ActivityDto>(activityDomainModel);
 
-    //     // return Ok(regionDto);
-    // }
+        return Ok(activityDto);
+    }
 
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeleteActivity(int id)
-    // {
-    //     var activity = await _context.Activities.FindAsync(id);
-    //     if (activity == null)
-    //     {
-    //         return NotFound();
-    //     }
+    [HttpDelete]
+    [Route("{id:Guid}")]
+    public async Task<IActionResult> Delete([FromRoute] Guid id)
+    {
+        // check if activity exists
+        var activityDomainModel = await activityRepository.DeleteAsync(id);
 
-    //     _context.Activities.Remove(activity);
-    //     await _context.SaveChangesAsync();
+        if(activityDomainModel == null)
+        {
+            return NotFound();
+        }
 
-    //     return NoContent();
-    // }
+        //convert domain model to DTO
+        var activityDto = mapper.Map<ActivityDto>(activityDomainModel);
+
+        return Ok(activityDto);
+    }
 }
