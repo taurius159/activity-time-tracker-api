@@ -1,6 +1,6 @@
 using Models.Domains;
 
-namespace Api.Repositories;
+namespace Repositories;
 public interface IActivityRepository
 {
     Task<List<Activity>> GetAllAsync();

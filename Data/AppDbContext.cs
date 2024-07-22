@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Models.Domains;
 
+namespace Data;
+
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }

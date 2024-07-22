@@ -1,6 +1,6 @@
 using Models.Domains;
 using Microsoft.EntityFrameworkCore;
-using Api.Repositories;
+using Data;
 
 namespace Repositories;
 public class SqlLiteActivityRecordRepository : IActivityRecordRepository

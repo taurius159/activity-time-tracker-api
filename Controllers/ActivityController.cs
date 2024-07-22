@@ -1,5 +1,6 @@
-using Api.Repositories;
+using Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.Domains;
@@ -7,6 +8,7 @@ using Models.DTOs;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class ActivityController : ControllerBase
 {
     private readonly IActivityRepository activityRepository;
