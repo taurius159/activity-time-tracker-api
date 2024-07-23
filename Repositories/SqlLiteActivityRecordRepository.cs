@@ -11,16 +11,16 @@ public class SqlLiteActivityRecordRepository : IActivityRecordRepository
         this.dbContext = dbContext;
     }
 
-    public async Task<List<ActivityRecord>> GetAllAsync()
+    public async Task<List<ActivityRecord>> GetAllByUserAsync(string userId)
     {
-        return await dbContext.ActivityRecords.ToListAsync();
+        return await dbContext.ActivityRecords.Where(a => a.UserId == userId).ToListAsync();
     }
 
-    public async Task<ActivityRecord?> GetByIdAsync(Guid id)
+    public async Task<ActivityRecord?> GetByRecordIdAndUserIdAsync(Guid id, string userId)
     {
         // Get Activity from Database
         //var activity = dbContext.Activities.Find(id); //find using primary key
-        return await dbContext.ActivityRecords.FirstOrDefaultAsync(x => x.Id == id); //use LINQ
+        return await dbContext.ActivityRecords.FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId); //use LINQ
     }
 
     public async Task<ActivityRecord?> CreateAsync(ActivityRecord activityRecordDomainModel)
@@ -31,10 +31,10 @@ public class SqlLiteActivityRecordRepository : IActivityRecordRepository
         return activityRecordDomainModel;
     }
 
-    public async Task<ActivityRecord?> DeleteAsync(Guid id)
+    public async Task<ActivityRecord?> DeleteAsync(Guid id, string userId)
     {
         // check if activity exists
-        var activityRecordDomainModel = await dbContext.ActivityRecords.FirstOrDefaultAsync(x => x.Id == id);
+        var activityRecordDomainModel = await dbContext.ActivityRecords.FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
 
         if (activityRecordDomainModel == null)
         {
