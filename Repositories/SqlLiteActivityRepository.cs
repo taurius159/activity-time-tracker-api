@@ -49,7 +49,7 @@ public class SqlLiteActivityRepository : IActivityRepository
     public async Task<Activity?> UpdateAsync(Guid id, Activity activity)
     {
         // check if activity exists
-        var existingActivity = await dbContext.Activities.FirstOrDefaultAsync(x => x.Id == id);
+        var existingActivity = await dbContext.Activities.FirstOrDefaultAsync(x => x.Id == id && x.UserId == activity.UserId);
 
         if (existingActivity == null)
         {

@@ -47,7 +47,12 @@ public class ActivityController : ControllerBase
     public async Task<ActionResult<Activity>> GetActivity([FromRoute] Guid id)
     {
         var userId = GetUserId();
-         var activityDomain = await activityRepository.GetByActivityIdAndUserIdAsync(id, userId);
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
+
+        var activityDomain = await activityRepository.GetByActivityIdAndUserIdAsync(id, userId);
 
         if (activityDomain == null)
         {
@@ -65,14 +70,12 @@ public class ActivityController : ControllerBase
 
         // Assign the user ID to the activity
         var userId = GetUserId();
-        if(userId == null)
+        if (userId == null)
         {
-            
-            return BadRequest();
+            return Unauthorized();
         }
-        Console.WriteLine($"Setting user ID to {userId}");
+
         activity.UserId = userId;
-        Console.WriteLine($"Activity user ID is set to {activity.UserId}");
 
         // use domain model to create activity
         activity = await activityRepository.CreateAsync(activity);
@@ -90,6 +93,15 @@ public class ActivityController : ControllerBase
         //map DTO to domain model for passing to repository for updating
         var activityDomainModel = mapper.Map<Activity>(updateActivityRequestDto);
         
+        // Assign the user ID to the activity
+        var userId = GetUserId();
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
+
+        activityDomainModel.UserId = userId;
+
         // check if activity exists
         activityDomainModel = await activityRepository.UpdateAsync(id, activityDomainModel);
 
@@ -108,6 +120,18 @@ public class ActivityController : ControllerBase
     [Route("{id:Guid}")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+        {
+            return Unauthorized();
+        }
+
+        var existingActivity = await activityRepository.GetByActivityIdAndUserIdAsync(id, userId);
+        if (existingActivity == null)
+        {
+            return NotFound();
+        }
+
         // check if activity exists
         var activityDomainModel = await activityRepository.DeleteAsync(id);
 
