@@ -53,4 +53,4 @@ jobs:
           app-name: 'att-api'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7F1E6B550ECD4DC3BF0FA93EF7972562 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C45A108805F54C668C3659902BBB0231 }}
