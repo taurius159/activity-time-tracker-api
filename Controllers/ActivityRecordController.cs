@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.Domains;
 using Models.DTOs;
+using System.Security.Claims;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -13,11 +14,14 @@ public class ActivityRecordController : ControllerBase
 {
     private readonly IActivityRecordRepository activityRecordRepository;
     private readonly IMapper mapper;
-
     public ActivityRecordController(IActivityRecordRepository activityRecordRepository, IMapper mapper)
     {
         this.activityRecordRepository = activityRecordRepository;
         this.mapper = mapper;
+    }
+    private string GetUserId()
+    {
+        return User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 
     [HttpGet]

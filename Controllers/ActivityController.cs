@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.Domains;
 using Models.DTOs;
+using System.Security.Claims;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -20,11 +21,21 @@ public class ActivityController : ControllerBase
         this.mapper = mapper;
     }
 
+    private string GetUserId()
+    {
+        // for(int i=0;i<= User.Claims.Count(); i++)
+        // {
+        //     Console.WriteLine($"Claim[{i}] = {User.Claims.ElementAt(i)}");
+        // }
+        return User.FindFirstValue(ClaimTypes.NameIdentifier);
+    }
+
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Activity>>> GetActivities()
     {
+        var userId = GetUserId();
         // Get data from database - domain models
-        var activitiesDomain = await activityRepository.GetAllAsync();
+        var activitiesDomain = await activityRepository.GetAllByUserIdAsync(userId);
 
         var activitiesDto = mapper.Map<List<ActivityDto>>(activitiesDomain);
 
@@ -35,7 +46,8 @@ public class ActivityController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Activity>> GetActivity([FromRoute] Guid id)
     {
-         var activityDomain = await activityRepository.GetByIdAsync(id);
+        var userId = GetUserId();
+         var activityDomain = await activityRepository.GetByActivityIdAndUserIdAsync(id, userId);
 
         if (activityDomain == null)
         {
@@ -50,6 +62,17 @@ public class ActivityController : ControllerBase
     {
         // convert DTO to domain mondel
         var activity = mapper.Map<Activity>(addActivityRequestDto);
+
+        // Assign the user ID to the activity
+        var userId = GetUserId();
+        if(userId == null)
+        {
+            
+            return BadRequest();
+        }
+        Console.WriteLine($"Setting user ID to {userId}");
+        activity.UserId = userId;
+        Console.WriteLine($"Activity user ID is set to {activity.UserId}");
 
         // use domain model to create activity
         activity = await activityRepository.CreateAsync(activity);
