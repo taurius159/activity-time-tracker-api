@@ -35,7 +35,7 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => 
 {
-    options.SwaggerDoc("v1", new OpenApiInfo {Title = "LTWalksApi", Version = "v1"});
+    options.SwaggerDoc("v1", new OpenApiInfo {Title = "ActivityTimeTrackerApi", Version = "v1"});
     options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -96,11 +96,11 @@ builder.Services.Configure<IdentityOptions>(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// if (app.Environment.IsDevelopment())
+// {
+app.UseSwagger();
+app.UseSwaggerUI();
+//}
 
 app.UseHttpsRedirection();
 
